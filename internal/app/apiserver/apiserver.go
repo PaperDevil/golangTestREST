@@ -1,6 +1,7 @@
 package apiserver
 
 import (
+	"github.com/PaperDevil/goREST/internal/app/store"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"io"
@@ -12,6 +13,7 @@ type APIServer struct {
 	config *Config        // Наша структура Config
 	logger *logrus.Logger // Логер
 	router *mux.Router    // Роутер
+	store  *store.Store   // Хранилище БД
 }
 
 // Инициализируем сервер
@@ -30,6 +32,10 @@ func (s *APIServer) Start() error {
 		return err
 	}
 	s.configgerRouter() // Устанавливаем маршруты
+	if err := s.configureStore(); err != nil {
+		// Конфигурирование БД
+		return err
+	}
 	// Выводим лог, о начале работы сервера
 	s.logger.Info("Starting API Server")
 	// Запускаем прослушку по адресу из конфига
@@ -53,6 +59,18 @@ func (s *APIServer) configureLogger() error {
 func (s *APIServer) configgerRouter() {
 	// По типу s.route.HandleFunc("/route", func())
 	s.router.HandleFunc("/hello", s.handleHello())
+}
+
+// Конфигурация хранилища БД
+func (s *APIServer) configureStore() error {
+	// var st *store.Store = store.New(s.config.Store)
+	st := store.New(s.config.Store) // Создаём экземпляр БД-коннектора
+	if err := st.Open(); err != nil {
+		// В случае ошибки соединения с БД
+		return err
+	}
+	s.store = st // Устанавливаем st как хранилище для сервера
+	return nil
 }
 
 // Роут /hello
