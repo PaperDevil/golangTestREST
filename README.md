@@ -3,24 +3,29 @@
 Разработано в соответствии с видеорядом -> https://www.youtube.com/watch?v=LxJLuW5aUDQ&t
 
 # Зависимости
- - github.com/BurntSushi/toml v0.3.1
- - github.com/gorilla/mux v1.7.4
- - github.com/sirupsen/logrus v1.6.0
- - github.com/stretchr/testify v1.6.1
+ - Golang go1.14.6 windows/amd64
+ - MinGW-w64gcc (x86_64-win32-seh-rev0, Built by MinGW-W64 project) 8.1.0
  
 # Запуск
-```
->> make build
->> ./apiserver
-```
+1. Получить копию проекта: 
+``git clone https://github.com/PaperDevil/golangTestREST.git``
 
+2. Далее нужно будет сконфигурировать окружения, понадобится 64-битная версия компилятора gcc.
+Лучшим вариантом булет MinGW-w64.
+Пропишите в переменную окружения PATH путь к компилятору.
+
+3. Нужно собрать миграцию для БД. Выполните команду:
+```make migrate```.
+Это запустит первую миграцию для локальной SQLite3 Базы Данных.
+
+4. Запустите сборку приложения командой: ```make build```
+5. Запустите приложения командой ```./apiserver.exe```
 # Тестирование
-Исходники лежат в ``./internal/app/apiserver``
-```
->> make test
-or
->> go test -v -race -timeout 30s ./...
-```
+*Исходники лежат в* ``./internal/app/apiserver``
+#### Зависимости
+ - github.com/stretchr/testify/assert
+
+Для запуска тестов воспользуйтесь командой ```make test```
 
 # Лицензии
 Этот проект лицензирован в соответствии с условиями лицензии MIT.
